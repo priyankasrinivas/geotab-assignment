@@ -23,7 +23,8 @@ public class Main {
 	        BufferedReader c = new BufferedReader(new InputStreamReader(System.in));
 	        System.out.println("Press ? to get instructions.");
 	        String input = c.readLine();
-	        if (input.equals("?")) {
+	   try {
+		   if (input.equals("?")) {
 	            while (true) {
 	            	System.out.println("Press c to get categories");
 	            	System.out.println("Press r to get random jokes");
@@ -68,7 +69,7 @@ public class Main {
 	                    	int n = Integer.parseInt(c.readLine());
 	                        getRandomJokes(category, n);
 	                        PrintResults();
-	                    }else {
+	                    }else if (key =='n'){
 	                    	System.out.println("How many jokes do you want? (1-9)");
 	                    	int n = Integer.parseInt(c.readLine());
 	                        getRandomJokes(null, n);
@@ -80,7 +81,15 @@ public class Main {
 	                }
 	                
 	            }
-	        }
+	   }catch(IllegalArgumentException ex) {
+		   System.out.println("Please enter a valid input");
+		   ex.printStackTrace();
+	   }
+	        	
+	   }
+	        
+	       
+	        
 	    
 	    private static void PrintResults() {
 	       System.out.println("[" +String.join(",", results) + "]");
@@ -129,6 +138,9 @@ public class Main {
 		                break;
 		            case "y":
 		                key = 'y';
+		                break;
+		            default :
+		                key = 'n';
 		                break;
 		        }
 	    		
