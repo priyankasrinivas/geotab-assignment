@@ -27,9 +27,9 @@ public class JsonFeed {
 	
     public static String[] getRandomJokes(String firstname,String lastname, String category) throws URISyntaxException, IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();
-        url += "?";
+       
         if (category != null) {
-            url += category;
+            url += "?"+category;
         }
         URI uri = new URI(url);
         HttpRequest request = HttpRequest.newBuilder().uri(uri).build();
