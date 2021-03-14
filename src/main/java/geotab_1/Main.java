@@ -9,21 +9,18 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.Hashtable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
 public class Main {
 	static char key;
     static Hashtable<String, String> names = new Hashtable<>();
 	static String[] results = new String[50];
 	
+	
 	 public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
 	        BufferedReader c = new BufferedReader(new InputStreamReader(System.in));
 	        System.out.println("Press ? to get instructions.");
 	        String input = c.readLine();
-	        if (input.equals("?")) {
+	   try {
+		   if (input.equals("?")) {
 	            while (true) {
 	            	System.out.println("Press c to get categories");
 	            	System.out.println("Press r to get random jokes");
@@ -57,18 +54,24 @@ public class Main {
 	                    getEnteredKey(c.readLine());
 	                    if (key == 'y') {
 	                        getNames();
+	                    }else if (key == 'n') {
+	                    	System.out.println("Enter a fullname: (ex: John Doe)");
+	                    	String name = c.readLine();
+	                    	getMyOwnName(name, null);
+	                    	
 	                    }
 	                    System.out.println("Want to specify a category? y/n");
 	                    getEnteredKey(c.readLine());
+	                    
 	                    if (key == 'y') {
-	                        System.out.println("Enter a category;");
+	                        System.out.println("Enter a category:");
 	                        getEnteredKey(c.readLine());
 	                        String category = c.readLine();
 	                        System.out.println("How many jokes do you want? (1-9)");
 	                    	int n = Integer.parseInt(c.readLine());
 	                        getRandomJokes(category, n);
 	                        PrintResults();
-	                    }else {
+	                    }else if (key =='n'){
 	                    	System.out.println("How many jokes do you want? (1-9)");
 	                    	int n = Integer.parseInt(c.readLine());
 	                        getRandomJokes(null, n);
@@ -80,7 +83,15 @@ public class Main {
 	                }
 	                
 	            }
-	        }
+	   }catch(IllegalArgumentException ex) {
+		   System.out.println("Please enter a valid input");
+		   ex.printStackTrace();
+	   }
+	        	
+	   }
+	        
+	       
+	        
 	    
 	    private static void PrintResults() {
 	       System.out.println("[" +String.join(",", results) + "]");
@@ -130,6 +141,9 @@ public class Main {
 		            case "y":
 		                key = 'y';
 		                break;
+		            default :
+		                key = 'n';
+		                break;
 		        }
 	    		
 	    	}
@@ -139,10 +153,11 @@ public class Main {
 	        
 	    }
 	    private static void getRandomJokes(String category, int number) throws InterruptedException, IOException, URISyntaxException {
-	    	System.out.println("names: "+names);
+	    	
 	        var var1 = names.entrySet().iterator().next();
 	        new JsonFeed("https://api.chucknorris.io/jokes/random", number);
 	        results = JsonFeed.getRandomJokes(var1.getKey(), var1.getValue(), category);
+	    	
 	    }
 
 	    private static void getCategories() throws InterruptedException, IOException, URISyntaxException {
@@ -154,5 +169,20 @@ public class Main {
 	        new JsonFeed("https://www.names.privserv.com/api/", 0);
 	        Dto dto = JsonFeed.getnames();
 	        Main.names.put(dto.getName(), dto.getSurname());
+	    	
+	    }
+	    
+	    private static void getMyOwnName(String fullname, String category) throws InterruptedException, IOException , URISyntaxException{
+	    	try {
+		    	String [] splitting = fullname.split(" ");
+		    	String var1 = splitting[0];
+		    	String var2 = splitting[1];
+		        new JsonFeed("https://api.chucknorris.io/jokes/random", 1);
+		        Main.names.put(var1, var2);
+	    		
+	    	}catch(IllegalArgumentException ex){
+	    		ex.printStackTrace();
+	    	}
+	    	
 	    }
 }
